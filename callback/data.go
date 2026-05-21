@@ -11,7 +11,7 @@ import (
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 
-	"github.com/pyrorhythm/fn/res"
+	"pyrorhythm.dev/fn/res"
 )
 
 const maxCallbackDataLen = 64

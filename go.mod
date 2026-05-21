@@ -22,7 +22,7 @@ require (
 
 require (
 	github.com/goccy/go-json v0.10.6 // indirect
-	github.com/pyrorhythm/fn v0.7.4
 	github.com/valyala/fastjson v1.6.10 // indirect
 	golang.org/x/sys v0.44.0 // indirect
+	pyrorhythm.dev/fn v0.7.5
 )

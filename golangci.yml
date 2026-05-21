@@ -9,7 +9,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/pyrorhythm/fn
+        - pyrorhythm.dev/fn
 
     golines:
       max-len: 100

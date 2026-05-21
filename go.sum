@@ -23,8 +23,6 @@ github.com/mymmrac/telego v1.9.0 h1:ZUJxZaPx/1IgRvVb5lXnUB8FgW5rNYfRe6Q2EJ4OJ+Y=
 github.com/mymmrac/telego v1.9.0/go.mod h1:tVEB7OqiOPx8elRk9+ETkwiDQrUhWSB2XmAKIY9KmWY=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/pyrorhythm/fn v0.7.4 h1:FwlCnQ/DBp5SB4MeEmnHtPEX/m7QvEVBpV7OmPotWkw=
-github.com/pyrorhythm/fn v0.7.4/go.mod h1:+yGue2pNVJsz7V333x/KwRDYgcNvWKNa4ieRNbShL70=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
@@ -57,3 +55,5 @@ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+pyrorhythm.dev/fn v0.7.5 h1:cQCancdVNDwAfs37Deqt7hW9RVU9BHLtwb3M00jHq3w=
+pyrorhythm.dev/fn v0.7.5/go.mod h1:AYAmwkBfX2u6hZftLxd9pmukW29olVzpdeCAx+J5uek=

@@ -8,7 +8,7 @@ gover:
 
 updsum SEMVER:
 	sleep 3
-	curl https://sum.golang.org/lookup/github.com/pyrorhythm/tgx@{{SEMVER}}
+	curl https://sum.golang.org/lookup/pyrorhythm.dev/tgx@{{SEMVER}}
 
 [parallel]
 upload-coverage-and-fetch SEMVER: gover (updsum SEMVER)

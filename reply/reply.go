@@ -5,7 +5,7 @@ import (
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
 
-	"github.com/pyrorhythm/fn/res"
+	"pyrorhythm.dev/fn/res"
 
 	"pyrorhythm.dev/tgx"
 )

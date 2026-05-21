@@ -4,7 +4,7 @@ package di
 import (
 	"context"
 
-	"github.com/pyrorhythm/fn/opt"
+	"pyrorhythm.dev/fn/opt"
 )
 
 type key[T any] struct{}
