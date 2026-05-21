@@ -6,8 +6,8 @@ import (
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 
-	"github.com/pyrorhythm/tgx"
-	"github.com/pyrorhythm/tgx/filters"
+	"pyrorhythm.dev/tgx"
+	"pyrorhythm.dev/tgx/filters"
 )
 
 func TestRouterRegistersHandler(t *testing.T) {
@@ -30,7 +30,13 @@ func TestRouterRegistersHandler(t *testing.T) {
 		return nil
 	}, tgx.WithFilters(filters.Command("start")))
 
-	u := telego.Update{UpdateID: 1, Message: &telego.Message{Text: "/start", Chat: telego.Chat{ID: 1, Type: telego.ChatTypePrivate}}}
+	u := telego.Update{
+		UpdateID: 1,
+		Message: &telego.Message{
+			Text: "/start",
+			Chat: telego.Chat{ID: 1, Type: telego.ChatTypePrivate},
+		},
+	}
 	if err := d.BotHandler().BaseGroup().HandleUpdate(t.Context(), bot, u); err != nil {
 		t.Fatal(err)
 	}

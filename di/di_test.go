@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/pyrorhythm/tgx/di"
+	"pyrorhythm.dev/tgx/di"
 )
 
 func TestPutGet(t *testing.T) {

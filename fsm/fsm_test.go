@@ -6,7 +6,7 @@ import (
 
 	"github.com/mymmrac/telego"
 
-	"github.com/pyrorhythm/tgx/fsm"
+	"pyrorhythm.dev/tgx/fsm"
 )
 
 func TestFSMTransition(t *testing.T) {

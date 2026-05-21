@@ -7,8 +7,8 @@ import (
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 
-	"github.com/pyrorhythm/tgx"
-	"github.com/pyrorhythm/tgx/fsm"
+	"pyrorhythm.dev/tgx"
+	"pyrorhythm.dev/tgx/fsm"
 )
 
 // Command matches an exact bot command (without leading slash in name).

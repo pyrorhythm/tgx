@@ -1,4 +1,4 @@
-module github.com/pyrorhythm/tgx
+module pyrorhythm.dev/tgx
 
 go 1.26.1
 

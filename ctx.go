@@ -7,7 +7,7 @@ import (
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
 
-	"github.com/pyrorhythm/tgx/di"
+	"pyrorhythm.dev/tgx/di"
 )
 
 // Ctx wraps telegohandler.Context with tgx helpers.
@@ -66,7 +66,11 @@ func (c *Ctx) AnswerCallback(queryID string, text string) error {
 }
 
 // AnswerInline answers an inline query.
-func (c *Ctx) AnswerInline(queryID string, results []telego.InlineQueryResult, cacheTime int) error {
+func (c *Ctx) AnswerInline(
+	queryID string,
+	results []telego.InlineQueryResult,
+	cacheTime int,
+) error {
 	return c.Bot.AnswerInlineQuery(c.Context(), &telego.AnswerInlineQueryParams{
 		InlineQueryID: queryID,
 		Results:       results,

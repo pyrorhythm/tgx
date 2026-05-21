@@ -4,9 +4,10 @@ package reply
 import (
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
+
 	"github.com/pyrorhythm/fn/res"
 
-	"github.com/pyrorhythm/tgx"
+	"pyrorhythm.dev/tgx"
 )
 
 // TextParams returns send-message params for chatID and text.

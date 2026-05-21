@@ -5,7 +5,7 @@ import (
 
 	"github.com/mymmrac/telego"
 
-	"github.com/pyrorhythm/tgx"
+	"pyrorhythm.dev/tgx"
 )
 
 func TestFilterCombinators(t *testing.T) {

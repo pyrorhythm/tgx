@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pyrorhythm/tgx/callback"
+	"pyrorhythm.dev/tgx/callback"
 )
 
 type adminAction struct {

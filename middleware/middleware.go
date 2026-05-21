@@ -9,7 +9,7 @@ import (
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 
-	"github.com/pyrorhythm/tgx"
+	"pyrorhythm.dev/tgx"
 )
 
 // Recover wraps panics into errors.

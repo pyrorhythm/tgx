@@ -10,9 +10,9 @@ import (
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
 
-	"github.com/pyrorhythm/tgx"
-	"github.com/pyrorhythm/tgx/filters"
-	tgxmw "github.com/pyrorhythm/tgx/middleware"
+	"pyrorhythm.dev/tgx"
+	"pyrorhythm.dev/tgx/filters"
+	tgxmw "pyrorhythm.dev/tgx/middleware"
 )
 
 func main() {

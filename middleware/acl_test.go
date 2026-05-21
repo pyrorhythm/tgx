@@ -5,8 +5,8 @@ import (
 
 	"github.com/mymmrac/telego"
 
-	"github.com/pyrorhythm/tgx"
-	"github.com/pyrorhythm/tgx/middleware"
+	"pyrorhythm.dev/tgx"
+	"pyrorhythm.dev/tgx/middleware"
 )
 
 func TestACL(t *testing.T) {
