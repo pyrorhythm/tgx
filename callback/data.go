@@ -60,8 +60,8 @@ func (c *Callback[T]) Unpack(data string) res.Of[T] {
 			return res.Errn[T]("callback: bad prefix")
 		}
 		data = strings.TrimPrefix(data, prefix)
-		if strings.HasPrefix(data, sep) {
-			data = strings.TrimPrefix(data, sep)
+		if after, ok := strings.CutPrefix(data, sep); ok {
+			data = after
 		}
 	}
 	parts := []string{}
