@@ -1,4 +1,4 @@
-// Package reply provides optional res.Of-style reply helpers (v1 minimal).
+// Package reply provides res.Of-style reply helpers.
 package reply
 
 import (
@@ -17,6 +17,5 @@ func TextParams(chatID int64, text string) res.Of[*telego.SendMessageParams] {
 
 // SendText sends text via ctx and wraps the API result.
 func SendText(ctx *tgx.Ctx, chatID int64, text string) res.Of[*telego.Message] {
-	msg, err := ctx.Bot.SendMessage(ctx.Context(), tu.Message(tu.ID(chatID), text))
-	return res.FromAny(msg, err)
+	return ctx.SendMessage(chatID, text)
 }

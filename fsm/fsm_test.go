@@ -22,8 +22,19 @@ func TestFSMTransition(t *testing.T) {
 	if !called {
 		t.Fatal("callback not called")
 	}
-	st, err := m.Current(42)
-	if err != nil || st != "next" {
-		t.Fatalf("state: %q err=%v", st, err)
+	st := m.Current(42)
+	if st.Err() != nil || st.Val() != "next" {
+		t.Fatalf("state: %q err=%v", st.Val(), st.Err())
+	}
+}
+
+func TestDataStorageMissingKey(t *testing.T) {
+	m := fsm.New[string, string]("start", nil)
+	if err := m.Set(1, "k", "v"); err != nil {
+		t.Fatal(err)
+	}
+	got := m.Get(1, "missing")
+	if got.Err() == nil {
+		t.Fatal("expected error for missing key")
 	}
 }

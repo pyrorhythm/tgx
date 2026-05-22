@@ -5,6 +5,7 @@ import (
 
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
+	"pyrorhythm.dev/fn/res"
 )
 
 // Dispatcher wraps telego bot update handling with tgx routers.
@@ -28,13 +29,13 @@ func WithErrorHandler(h ErrorHandler) DispatcherOption {
 }
 
 // NewDispatcher creates a dispatcher from bot and updates channel.
-func NewDispatcher(bot *telego.Bot, updates <-chan telego.Update, opts ...DispatcherOption) (*Dispatcher, error) {
+func NewDispatcher(bot *telego.Bot, updates <-chan telego.Update, opts ...DispatcherOption) res.Of[*Dispatcher] {
 	d := &Dispatcher{Bot: bot, Updates: updates}
 
 	var thOpts []th.BotHandlerOption
 	for _, opt := range opts {
 		if err := opt(d); err != nil {
-			return nil, err
+			return res.Err[*Dispatcher](err)
 		}
 	}
 	if d.onError != nil {
@@ -45,11 +46,11 @@ func NewDispatcher(bot *telego.Bot, updates <-chan telego.Update, opts ...Dispat
 
 	bh, err := th.NewBotHandler(bot, updates, thOpts...)
 	if err != nil {
-		return nil, err
+		return res.Err[*Dispatcher](err)
 	}
 	d.bh = bh
 	d.root = &Router{d: d, group: bh.BaseGroup()}
-	return d, nil
+	return res.OK(d)
 }
 
 // Router returns the root router.

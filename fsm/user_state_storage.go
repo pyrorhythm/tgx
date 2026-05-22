@@ -3,6 +3,8 @@ package fsm
 import (
 	"fmt"
 	"sync"
+
+	"pyrorhythm.dev/fn/res"
 )
 
 // userStateStorage is a type for default user's state storage
@@ -29,24 +31,24 @@ func (u *userStateStorage) Set(userID int64, stateID StateID) error {
 }
 
 // Exists checks whether any user's state exist in state storage
-func (u *userStateStorage) Exists(userID int64) (bool, error) {
-	u.mu.Lock()
-	defer u.mu.Unlock()
+func (u *userStateStorage) Exists(userID int64) res.Of[bool] {
+	u.mu.RLock()
+	defer u.mu.RUnlock()
 
 	_, ok := u.Storage[userID]
 
-	return ok, nil
+	return res.OKAny(ok)
 }
 
 // Get gets user's state from state storage
-func (u *userStateStorage) Get(userID int64) (StateID, error) {
-	u.mu.Lock()
-	defer u.mu.Unlock()
+func (u *userStateStorage) Get(userID int64) res.Of[StateID] {
+	u.mu.RLock()
+	defer u.mu.RUnlock()
 
 	s, ok := u.Storage[userID]
 	if !ok {
-		return "", fmt.Errorf("%w: userID: %d", ErrNoUserState, userID)
+		return res.Errn[StateID](fmt.Sprintf("%v: userID: %d", ErrNoUserState, userID))
 	}
 
-	return s, nil
+	return res.OKAny(s)
 }

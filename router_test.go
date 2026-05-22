@@ -17,15 +17,16 @@ func TestRouterRegistersHandler(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	d, err := tgx.NewDispatcher(bot, updates)
-	if err != nil {
+	dres := tgx.NewDispatcher(bot, updates)
+	if !dres.OK() {
 		t.Fatal(err)
 	}
 	_ = bh
-	_ = d
+
+	d := dres.Val()
 
 	got := false
-	d.Router().OnMessage(func(ctx *tgx.Ctx, msg telego.Message) error {
+	d.Router().OnMessage(func(_ *tgx.Ctx, _ telego.Message) error {
 		got = true
 		return nil
 	}, tgx.WithFilters(filters.Command("start")))

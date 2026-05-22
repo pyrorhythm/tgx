@@ -3,7 +3,7 @@ package tgx
 // Handler is a typed update handler.
 type Handler[T any] func(ctx *Ctx, ev T) error
 
-// Middleware runs around handlers. Return nil to continue; skip ctx.Next equivalent by not calling next.
+// Middleware runs around handlers.
 type Middleware func(ctx *Ctx, next func() error) error
 
 // ErrorHandler observes handler errors.

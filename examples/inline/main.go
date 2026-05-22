@@ -18,23 +18,25 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
-	bot, err := tgx.NewBotFromEnv()
-	if err != nil {
-		fmt.Println(err)
+	bot := tgx.NewBotFromEnv()
+	if bot.Err() != nil {
+		fmt.Println(bot.Err())
 		os.Exit(1)
 	}
 
-	updates, err := tgx.UpdatesLongPolling(ctx, bot, nil)
-	if err != nil {
-		fmt.Println(err)
+	updates := tgx.UpdatesLongPolling(ctx, bot.Val(), nil)
+	if updates.Err() != nil {
+		fmt.Println(updates.Err())
 		os.Exit(1)
 	}
 
-	d, err := tgx.NewDispatcher(bot, updates)
-	if err != nil {
-		fmt.Println(err)
+	dres := tgx.NewDispatcher(bot.Val(), updates.Val())
+	if !dres.OK() {
+		fmt.Println(dres.Err())
 		os.Exit(1)
 	}
+
+	d := dres.Val()
 
 	d.BotHandler().Use(tgxmw.TelegoRecover())
 	d.Router().OnInlineQuery(func(c *tgx.Ctx, q telego.InlineQuery) error {

@@ -15,11 +15,11 @@ type adminAction struct {
 func TestCallbackRoundTrip(t *testing.T) {
 	cb := callback.New[adminAction]()
 	v := adminAction{Action: "ban", UserID: 123456789}
-	data, err := cb.Pack(v)
-	if err != nil {
-		t.Fatal(err)
+	data := cb.Pack(v)
+	if data.Err() != nil {
+		t.Fatal(data.Err())
 	}
-	got := cb.Unpack(data)
+	got := cb.Unpack(data.Val())
 	if got.Err() != nil {
 		t.Fatal(got.Err())
 	}
@@ -35,8 +35,8 @@ type longPayload struct {
 
 func TestCallbackOverflow(t *testing.T) {
 	cb := callback.New[longPayload]()
-	_, err := cb.Pack(longPayload{Pad: strings.Repeat("x", 70)})
-	if err == nil {
+	r := cb.Pack(longPayload{Pad: strings.Repeat("x", 70)})
+	if r.Err() == nil {
 		t.Fatal("expected overflow error")
 	}
 }

@@ -7,6 +7,8 @@ import (
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
 
+	"pyrorhythm.dev/fn/opt"
+	"pyrorhythm.dev/fn/res"
 	"pyrorhythm.dev/tgx/di"
 )
 
@@ -35,12 +37,8 @@ func PutCtx[T any](c *Ctx, v T) *Ctx {
 }
 
 // Get reads a typed value from the context bag.
-func Get[T any](c *Ctx) (v T, ok bool) {
-	o := di.Get[T](c.Context())
-	if !o.Valid() {
-		return v, false
-	}
-	return o.Val(), true
+func Get[T any](c *Ctx) opt.Of[T] {
+	return di.Get[T](c.Context())
 }
 
 func wrapCtx(thCtx *th.Context, update telego.Update) *Ctx {
@@ -52,17 +50,18 @@ func wrapCtx(thCtx *th.Context, update telego.Update) *Ctx {
 }
 
 // SendMessage sends a text message to chatID.
-func (c *Ctx) SendMessage(chatID int64, text string) error {
-	_, err := c.Bot.SendMessage(c.Context(), tu.Message(tu.ID(chatID), text))
-	return err
+func (c *Ctx) SendMessage(chatID int64, text string) res.Of[*telego.Message] {
+	msg, err := c.Bot.SendMessage(c.Context(), tu.Message(tu.ID(chatID), text))
+	return res.FromAny(msg, err)
 }
 
 // AnswerCallback answers a callback query.
 func (c *Ctx) AnswerCallback(queryID string, text string) error {
-	return c.Bot.AnswerCallbackQuery(c.Context(), &telego.AnswerCallbackQueryParams{
+	err := c.Bot.AnswerCallbackQuery(c.Context(), &telego.AnswerCallbackQueryParams{
 		CallbackQueryID: queryID,
 		Text:            text,
 	})
+	return err
 }
 
 // AnswerInline answers an inline query.
@@ -71,9 +70,10 @@ func (c *Ctx) AnswerInline(
 	results []telego.InlineQueryResult,
 	cacheTime int,
 ) error {
-	return c.Bot.AnswerInlineQuery(c.Context(), &telego.AnswerInlineQueryParams{
+	err := c.Bot.AnswerInlineQuery(c.Context(), &telego.AnswerInlineQueryParams{
 		InlineQueryID: queryID,
 		Results:       results,
 		CacheTime:     cacheTime,
 	})
+	return err
 }

@@ -29,15 +29,6 @@ func (r *Router) Group(filters ...Filter) *Router {
 	return &Router{d: r.d, group: g}
 }
 
-// Include returns sub when sub was created from this router via Group.
-// Sub-routers are attached at creation time through telego's HandlerGroup tree.
-func (r *Router) Include(sub *Router) *Router {
-	if sub == nil {
-		return r
-	}
-	return sub
-}
-
 func outerMiddleware(m Middleware) th.Handler {
 	return func(thCtx *th.Context, update telego.Update) error {
 		ctx := wrapCtx(thCtx, update)

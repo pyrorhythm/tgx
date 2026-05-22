@@ -1,8 +1,6 @@
 package inline
 
 import (
-	"log/slog"
-
 	"github.com/mymmrac/telego"
 
 	"pyrorhythm.dev/tgx"
@@ -32,16 +30,14 @@ func (r *Router) On(command string, h QueryHandler) {
 
 // Handle parses the query and runs the matching handler.
 func (r *Router) Handle(c *tgx.Ctx, q telego.InlineQuery) error {
-	parsed, ok := r.parser.Parse(q.Query)
-	if !ok {
+	parsed := r.parser.Parse(q.Query)
+	if !parsed.Valid() {
 		return nil
 	}
 
-	slog.Info("inline query", "command", parsed.Command, "args", parsed.Args)
-
-	h, ok := r.handlers[parsed.Command]
+	h, ok := r.handlers[parsed.Val().Command]
 	if !ok {
 		return nil
 	}
-	return h(c, q, parsed.Args)
+	return h(c, q, parsed.Val().Args)
 }

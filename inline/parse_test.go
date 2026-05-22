@@ -27,15 +27,16 @@ func TestParser_Parse(t *testing.T) {
 		{"a", "", "", false},
 	}
 	for _, tc := range tests {
-		got, ok := p.Parse(tc.in)
-		if ok != tc.wantOK {
-			t.Fatalf("%q: ok=%v want %v", tc.in, ok, tc.wantOK)
+		got := p.Parse(tc.in)
+		if got.Valid() != tc.wantOK {
+			t.Fatalf("%q: valid=%v want %v", tc.in, got.Valid(), tc.wantOK)
 		}
-		if !ok {
+		if !got.Valid() {
 			continue
 		}
-		if got.Command != tc.cmd || got.Args != tc.args {
-			t.Fatalf("%q: got cmd=%q args=%q want cmd=%q args=%q", tc.in, got.Command, got.Args, tc.cmd, tc.args)
+		v := got.Val()
+		if v.Command != tc.cmd || v.Args != tc.args {
+			t.Fatalf("%q: got cmd=%q args=%q want cmd=%q args=%q", tc.in, v.Command, v.Args, tc.cmd, tc.args)
 		}
 	}
 }

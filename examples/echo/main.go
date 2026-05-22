@@ -8,40 +8,41 @@ import (
 	"os/signal"
 
 	"github.com/mymmrac/telego"
-	tu "github.com/mymmrac/telego/telegoutil"
 
 	"pyrorhythm.dev/tgx"
 	"pyrorhythm.dev/tgx/filters"
 	tgxmw "pyrorhythm.dev/tgx/middleware"
+	"pyrorhythm.dev/tgx/reply"
 )
 
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
-	bot, err := tgx.NewBotFromEnv()
-	if err != nil {
-		fmt.Println(err)
+	bot := tgx.NewBotFromEnv()
+	if bot.Err() != nil {
+		fmt.Println(bot.Err())
 		os.Exit(1)
 	}
 
-	updates, err := tgx.UpdatesLongPolling(ctx, bot, nil)
-	if err != nil {
-		fmt.Println(err)
+	updates := tgx.UpdatesLongPolling(ctx, bot.Val(), nil)
+	if !updates.OK() {
+		fmt.Println(updates.Err())
 		os.Exit(1)
 	}
 
-	d, err := tgx.NewDispatcher(bot, updates)
-	if err != nil {
-		fmt.Println(err)
+	dres := tgx.NewDispatcher(bot.Val(), updates.Val())
+	if !dres.OK() {
+		fmt.Println(dres.Err())
 		os.Exit(1)
 	}
+
+	d := dres.Val()
 
 	d.BotHandler().Use(tgxmw.TelegoRecover())
 	d.Router().Use(tgxmw.Recover(), tgxmw.Logger())
 	d.Router().OnMessage(func(c *tgx.Ctx, msg telego.Message) error {
-		_, err := c.Bot.SendMessage(c.Context(), tu.Message(tu.ID(msg.Chat.ID), msg.Text))
-		return err
+		return reply.SendText(c, msg.Chat.ID, msg.Text).Err()
 	}, tgx.WithFilters(filters.Command("echo")))
 
 	fmt.Println("echo bot running")

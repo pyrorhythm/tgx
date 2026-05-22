@@ -2,6 +2,8 @@ package fsm
 
 import (
 	"sync"
+
+	"pyrorhythm.dev/fn/res"
 )
 
 // dataStorage is a type for default data storage
@@ -34,16 +36,21 @@ func (d *dataStorage[K, V]) Set(userID int64, key K, value V) error {
 }
 
 // Get gets user's data from data storage
-func (d *dataStorage[K, V]) Get(userID int64, key K) (V, error) {
+func (d *dataStorage[K, V]) Get(userID int64, key K) res.Of[V] {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	if _, ok := d.Storage[userID]; !ok {
-		var empty V
-		return empty, ErrNoUserData
+	m, ok := d.Storage[userID]
+	if !ok {
+		return res.Err[V](ErrNoUserData)
 	}
 
-	return d.Storage[userID][key], nil
+	v, ok := m[key]
+	if !ok {
+		return res.Err[V](ErrNoUserData)
+	}
+
+	return res.OKAny(v)
 }
 
 // Delete deletes user's data from data storage

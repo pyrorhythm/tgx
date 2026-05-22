@@ -28,11 +28,11 @@ func New[T any]() *Callback[T] {
 }
 
 // Pack encodes v as callback_data (max 64 bytes).
-func (c *Callback[T]) Pack(v T) (string, error) {
+func (c *Callback[T]) Pack(v T) res.Of[string] {
 	prefix := c.prefixFor(v)
 	parts, err := c.encodeFields(v)
 	if err != nil {
-		return "", err
+		return res.Err[string](err)
 	}
 	data := prefix
 	if len(parts) > 0 {
@@ -42,9 +42,9 @@ func (c *Callback[T]) Pack(v T) (string, error) {
 		data += strings.Join(parts, string(c.sep()))
 	}
 	if len(data) > maxCallbackDataLen {
-		return "", fmt.Errorf("callback: data exceeds %d bytes", maxCallbackDataLen)
+		return res.Errn[string](fmt.Sprintf("callback: data exceeds %d bytes", maxCallbackDataLen))
 	}
-	return data, nil
+	return res.OKAny(data)
 }
 
 // Unpack decodes callback_data into T.
@@ -87,11 +87,11 @@ func (c *Callback[T]) Filter(pred func(T) bool) th.Predicate {
 
 // Equal returns a predicate matching packed value of v.
 func (c *Callback[T]) Equal(v T) th.Predicate {
-	data, err := c.Pack(v)
-	if err != nil {
+	data := c.Pack(v)
+	if data.Err() != nil {
 		return func(context.Context, telego.Update) bool { return false }
 	}
-	return th.CallbackDataEqual(data)
+	return th.CallbackDataEqual(data.Val())
 }
 
 func (c *Callback[T]) sep() byte {

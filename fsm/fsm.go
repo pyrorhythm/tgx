@@ -2,10 +2,12 @@ package fsm
 
 import (
 	"context"
-	"fmt"
 	"maps"
 
 	"github.com/mymmrac/telego"
+	"github.com/pkg/errors"
+
+	"pyrorhythm.dev/fn/res"
 )
 
 // StateID is a type for state identifier
@@ -25,14 +27,14 @@ type FSM[K comparable, V any] struct {
 // UserStateStorage is an interface for user state storage
 type UserStateStorage interface {
 	Set(userID int64, stateID StateID) error
-	Exists(userID int64) (bool, error)
-	Get(userID int64) (StateID, error)
+	Exists(userID int64) res.Of[bool]
+	Get(userID int64) res.Of[StateID]
 }
 
 // DataStorage is an interface for data storage
 type DataStorage[K comparable, V any] interface {
 	Set(userID int64, key K, value V) error
-	Get(userID int64, key K) (V, error)
+	Get(userID int64, key K) res.Of[V]
 	Delete(userID int64, key K) error
 }
 
@@ -63,14 +65,18 @@ func (f *FSM[K, V]) AddCallbacks(cb map[StateID]Callback) {
 }
 
 // Transition transitions the user to a new state
-func (f *FSM[K, V]) Transition(ctx context.Context, userID int64, stateID StateID, b *telego.Bot, u telego.Update) error {
-	err := f.userStates.Set(userID, stateID)
-	if err != nil {
-		return fmt.Errorf("failed to set user state: %w", err)
+func (f *FSM[K, V]) Transition(
+	ctx context.Context,
+	userID int64,
+	stateID StateID,
+	b *telego.Bot,
+	u telego.Update,
+) error {
+	if err := f.userStates.Set(userID, stateID); err != nil {
+		return errors.Wrap(err, "failed to set user state")
 	}
 
-	cb, okCb := f.callbacks[stateID]
-	if okCb {
+	if cb, ok := f.callbacks[stateID]; ok {
 		cb(ctx, b, u)
 	}
 
@@ -78,26 +84,24 @@ func (f *FSM[K, V]) Transition(ctx context.Context, userID int64, stateID StateI
 }
 
 // Current returns the current state of the user
-func (f *FSM[K, V]) Current(userID int64) (StateID, error) {
-	ok, err := f.userStates.Exists(userID)
+func (f *FSM[K, V]) Current(userID int64) res.Of[StateID] {
+	ok, err := f.userStates.Exists(userID).Unpack()
 	if err != nil {
-		return "", fmt.Errorf("failed to check user state: %w", err)
+		return res.Errw[StateID](err, "failed to check user state")
 	}
 	if !ok {
-		err = f.userStates.Set(userID, f.initialStateID)
-		if err != nil {
-			return "", fmt.Errorf("failed to set user state to initial: %w", err)
+		if err := f.userStates.Set(userID, f.initialStateID); err != nil {
+			return res.Errw[StateID](err, "failed to set user state to initial")
 		}
-
-		return f.initialStateID, nil
+		return res.OKAny(f.initialStateID)
 	}
 
-	state, err := f.userStates.Get(userID)
+	state, err := f.userStates.Get(userID).Unpack()
 	if err != nil {
-		return "", fmt.Errorf("failed to get user state: %w", err)
+		return res.Errw[StateID](err, "failed to get user state")
 	}
 
-	return state, nil
+	return res.OKAny(state)
 }
 
 // Reset resets the state of the user to the initial state
@@ -107,31 +111,19 @@ func (f *FSM[K, V]) Reset(userID int64) error {
 
 // Set sets a value to data storage by userID and comparable
 func (f *FSM[K, V]) Set(userID int64, key K, value V) error {
-	err := f.storage.Set(userID, key, value)
-	if err != nil {
-		return fmt.Errorf("failed to set user data: %w", err)
-	}
-
-	return nil
+	return errors.Wrap(f.storage.Set(userID, key, value), "failed to set user data")
 }
 
 // Get gets a value from data storage by userID and comparable
-func (f *FSM[K, V]) Get(userID int64, key K) (V, error) {
-	v, err := f.storage.Get(userID, key)
-	if err != nil {
-		var empty V
-		return empty, fmt.Errorf("failed to get user data: %w", err)
+func (f *FSM[K, V]) Get(userID int64, key K) res.Of[V] {
+	r := f.storage.Get(userID, key)
+	if r.Err() != nil {
+		return res.Errw[V](r.Err(), "failed to get user data")
 	}
-
-	return v, nil
+	return r
 }
 
 // Delete deletes a value from data storage by userID and comparable
 func (f *FSM[K, V]) Delete(userID int64, key K) error {
-	err := f.storage.Delete(userID, key)
-	if err != nil {
-		return fmt.Errorf("failed to delete user data: %w", err)
-	}
-
-	return nil
+	return errors.Wrap(f.storage.Delete(userID, key), "failed to delete user data")
 }

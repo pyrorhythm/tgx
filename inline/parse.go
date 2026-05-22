@@ -1,6 +1,10 @@
 package inline
 
-import "strings"
+import (
+	"strings"
+
+	"pyrorhythm.dev/fn/opt"
+)
 
 // ParsedQuery is a command name plus arguments (everything after the first token).
 type ParsedQuery struct {
@@ -33,11 +37,11 @@ func NewParser(defaultCommand CommandRule, commands ...CommandRule) *Parser {
 	return p
 }
 
-// Parse returns false for empty queries or when argument length rules are not met.
-func (p *Parser) Parse(query string) (ParsedQuery, bool) {
+// Parse returns Nil for empty queries or when argument length rules are not met.
+func (p *Parser) Parse(query string) opt.Of[ParsedQuery] {
 	query = strings.TrimSpace(query)
 	if query == "" {
-		return ParsedQuery{}, false
+		return opt.Nil[ParsedQuery]()
 	}
 
 	slots := strings.Fields(query)
@@ -49,13 +53,13 @@ func (p *Parser) Parse(query string) (ParsedQuery, bool) {
 
 	if rule, ok := p.byName[name]; ok {
 		if len(args) < rule.MinArgsLen {
-			return ParsedQuery{}, false
+			return opt.Nil[ParsedQuery]()
 		}
-		return ParsedQuery{Command: rule.Name, Args: args}, true
+		return opt.SomeAny(ParsedQuery{Command: rule.Name, Args: args})
 	}
 
 	if len(query) < p.defaultCommand.MinArgsLen {
-		return ParsedQuery{}, false
+		return opt.Nil[ParsedQuery]()
 	}
-	return ParsedQuery{Command: p.defaultCommand.Name, Args: query}, true
+	return opt.SomeAny(ParsedQuery{Command: p.defaultCommand.Name, Args: query})
 }

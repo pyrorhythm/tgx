@@ -1,38 +1,47 @@
 package tgx
 
-import "github.com/mymmrac/telego"
+import (
+	"github.com/mymmrac/telego"
 
-func narrowMessage(u *telego.Update) (telego.Message, bool) {
+	"pyrorhythm.dev/fn/opt"
+)
+
+// NarrowMessage extracts a message update.
+func NarrowMessage(u *telego.Update) opt.Of[telego.Message] {
 	if u == nil || u.Message == nil {
-		return telego.Message{}, false
+		return opt.Nil[telego.Message]()
 	}
-	return *u.Message, true
+	return opt.SomeAny(*u.Message)
 }
 
-func narrowEditedMessage(u *telego.Update) (telego.Message, bool) {
+// NarrowEditedMessage extracts an edited message update.
+func NarrowEditedMessage(u *telego.Update) opt.Of[telego.Message] {
 	if u == nil || u.EditedMessage == nil {
-		return telego.Message{}, false
+		return opt.Nil[telego.Message]()
 	}
-	return *u.EditedMessage, true
+	return opt.SomeAny(*u.EditedMessage)
 }
 
-func narrowCallbackQuery(u *telego.Update) (telego.CallbackQuery, bool) {
+// NarrowCallbackQuery extracts a callback query update.
+func NarrowCallbackQuery(u *telego.Update) opt.Of[telego.CallbackQuery] {
 	if u == nil || u.CallbackQuery == nil {
-		return telego.CallbackQuery{}, false
+		return opt.Nil[telego.CallbackQuery]()
 	}
-	return *u.CallbackQuery, true
+	return opt.SomeAny(*u.CallbackQuery)
 }
 
-func narrowInlineQuery(u *telego.Update) (telego.InlineQuery, bool) {
+// NarrowInlineQuery extracts an inline query update.
+func NarrowInlineQuery(u *telego.Update) opt.Of[telego.InlineQuery] {
 	if u == nil || u.InlineQuery == nil {
-		return telego.InlineQuery{}, false
+		return opt.Nil[telego.InlineQuery]()
 	}
-	return *u.InlineQuery, true
+	return opt.SomeAny(*u.InlineQuery)
 }
 
-func narrowChosenInlineResult(u *telego.Update) (telego.ChosenInlineResult, bool) {
+// NarrowChosenInlineResult extracts a chosen inline result update.
+func NarrowChosenInlineResult(u *telego.Update) opt.Of[telego.ChosenInlineResult] {
 	if u == nil || u.ChosenInlineResult == nil {
-		return telego.ChosenInlineResult{}, false
+		return opt.Nil[telego.ChosenInlineResult]()
 	}
-	return *u.ChosenInlineResult, true
+	return opt.SomeAny(*u.ChosenInlineResult)
 }
