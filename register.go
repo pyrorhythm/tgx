@@ -77,3 +77,8 @@ func (r *Router) OnInlineQuery(h Handler[telego.InlineQuery], opts ...RouteOptio
 func (r *Router) OnChosenInlineResult(h Handler[telego.ChosenInlineResult], opts ...RouteOption) {
 	registerHandler(r, applyRouteOpts(opts...), NarrowChosenInlineResult, h)
 }
+
+// OnGuestMessage registers a guest message handler.
+func (r *Router) OnGuestMessage(h Handler[telego.Message], opts ...RouteOption) {
+	registerHandler(r, applyRouteOpts(opts...), NarrowGuestMessage, h)
+}

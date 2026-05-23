@@ -4,6 +4,7 @@ package middleware
 import (
 	"fmt"
 	"log/slog"
+	"runtime/debug"
 	"sync"
 
 	"github.com/mymmrac/telego"
@@ -20,6 +21,7 @@ func Recover() tgx.Middleware {
 	return func(ctx *tgx.Ctx, next func() error) (err error) {
 		defer func() {
 			if r := recover(); r != nil {
+				fmt.Println(string(debug.Stack()))
 				err = fmt.Errorf("tgx: panic: %v", r)
 			}
 		}()

@@ -20,6 +20,8 @@ func UserID(u *telego.Update) opt.Of[int64] {
 		return opt.Some(u.InlineQuery.From.ID)
 	case u.ChosenInlineResult != nil:
 		return opt.Some(u.ChosenInlineResult.From.ID)
+	case u.GuestMessage != nil && u.GuestMessage.From != nil:
+		return opt.Some(u.GuestMessage.From.ID)
 	default:
 		return opt.Nil[int64]()
 	}

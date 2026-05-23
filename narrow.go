@@ -45,3 +45,11 @@ func NarrowChosenInlineResult(u *telego.Update) opt.Of[telego.ChosenInlineResult
 	}
 	return opt.SomeAny(*u.ChosenInlineResult)
 }
+
+// NarrowGuestMessage extracts a guest message update.
+func NarrowGuestMessage(u *telego.Update) opt.Of[telego.Message] {
+	if u == nil || u.GuestMessage == nil {
+		return opt.Nil[telego.Message]()
+	}
+	return opt.SomeAny(*u.GuestMessage)
+}
